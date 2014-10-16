@@ -72,7 +72,7 @@ def normalize_string(mac_type, options):
         normalized += options['app'] + '\n'
         if 'dlg' in options and len(options['dlg']) > 0:
             normalized += options['dlg'] + '\n'
-
+    
     return normalized
 
 def calculate_payload_hash(payload, algorithm, content_type):

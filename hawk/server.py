@@ -92,7 +92,7 @@ class Server(object):
                 raise BadRequest
 
         skew = int(options['timestampSkewSec'])
-        if math.fabs(int(attributes['ts']) - now) > skew:
+        if math.fabs(int(attributes['ts'].split(".")[0]) - now) > skew:
             print "Expired request"
             raise BadRequest
 
@@ -102,7 +102,6 @@ class Server(object):
         """Checks inputs and calculates MAC."""
         if 'key' not in credentials or 'algorithm' not in credentials:
             raise MissingCredentials
-        
         mac = hcrypto.calculate_mac('header', credentials, artifacts)
 
         return mac
@@ -149,8 +148,7 @@ class Server(object):
         h_artifacts = copy.copy(artifacts)
         del h_artifacts['mac']
 
-        if 'hash' in options:
-            h_artifacts['hash'] = options['hash']
+        h_artifacts['hash'] = options.get('hash', None)
 
         if 'ext' in options:
             h_artifacts['ext'] = options['ext']
