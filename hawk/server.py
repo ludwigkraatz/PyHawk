@@ -28,6 +28,13 @@ class BadRequest(util.HawkException):
     pass
 
 
+class BadTimingRequest(BadRequest):
+    """Exception raised for bad timestamps on request."""
+    def __init__(self, ts, *args, **kwargs):
+        super(BadTimingRequest, self).__init__(*args, **kwargs)
+        self.ts = int(round(ts))
+
+
 class MissingCredentials(util.HawkException):
     """Exception raised for bad security configuration."""
     pass
@@ -94,7 +101,7 @@ class Server(object):
         skew = int(options['timestampSkewSec'])
         if math.fabs(int(attributes['ts'].split(".")[0]) - now) > skew:
             print "Expired request"
-            raise BadRequest
+            raise BadTimingRequest(now)
 
         return artifacts
 
